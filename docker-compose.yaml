@@ -1,18 +1,15 @@
 version: '3.8'
 
-# #Docker Networks
 networks:
   mcl-network:
     driver: bridge
 
-# #Volumes
 volumes:
   mcl-data:
     driver: local
   mcl-data-test:
     driver: local
 
-# Workflow
 services:
   nginx:
     image: nginx:1.25.3
@@ -57,26 +54,17 @@ services:
       - .env.testing
     environment:
       - MYSQL_ROOT_PASSWORD=test_pass_1
-      - MYSQL_DATABASE=movies_content_list
-      - MYSQL_USER=movies_content_list
+      - MYSQL_DATABASE=movies_content_list_test
+      - MYSQL_USER=movies_content_list_test
       - MYSQL_PASSWORD=test_pass
     ports:
-      - 3308:3307
+      - 8302:3306
     volumes:
       - mcl-data-test:/var/lib/mysql
       - ./docker/mysql/config/my.cnf:/etc/mysql/my.cnf
     command: mysqld --sql_mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
     networks:
       - mcl-network
-
-  # redis:
-  #   image: "redis:alpine"
-  #   container_name: redis
-  #   restart: unless-stopped
-  #   ports:
-  #     - "6380:6379"
-  #   networks:
-  #     - laravel
 
   php:
     build:
